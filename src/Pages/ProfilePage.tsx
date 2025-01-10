@@ -225,157 +225,160 @@ const ProfilePage = () => {
     }
 
     return (
-        <div className="profile-page bg-gray-900 text-white min-h-screen p-6 flex">
-            {isFileTooLarge && (
-                <div className="error-message text-red-500">The file size exceeds the limit of 1MB. Please upload a smaller image.</div>
-            )}
-            <div className="left-section w-2/3 pr-6">
-                <h1 className="text-4xl font-bold mb-8 text-yellow-500">Profile Page</h1>
-
-                <div className="profile-header flex items-center gap-6 mb-8">
-                    <img
-                        src={`${profilePicture}?${new Date().getTime()}`}
-                        alt="Profile"
-                        className="w-36 h-36 rounded-full border-4 border-yellow-500 object-cover"
-                    />
-
-
-                    <div className="flex flex-col gap-4">
-                        <input
-                            type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            placeholder="Edit Username"
-                            className="bg-gray-800 border border-gray-700 text-white p-3 rounded-lg focus:ring-2 focus:ring-yellow-500"
-                        />
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleProfilePictureChange}
-                            className="text-gray-300 text-sm"
-                        />
-                    </div>
-                </div>
-
-                <div className="preferences mb-8">
-                    <h2 className="text-2xl font-semibold mb-4">Preferences</h2>
-                    <div className="flex flex-wrap gap-4">
-                        {Object.keys(genreToId).map((genre, index) => (
-                            <button
-                                key={index}
-                                className={`px-5 py-2 rounded-lg ${selectedGenres.includes(genre) ? 'bg-yellow-500' : 'bg-gray-700'} hover:bg-yellow-600`}
-                                onClick={() =>
-                                    setSelectedGenres((prev) =>
-                                        prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre]
-                                    )
-                                }
-                            >
-                                {genre}
-                            </button>
-                        ))}
-                    </div>
-                    <div className='align-center justify-center'>
-                    <button 
-                        onClick={handleSave}
-                        className={`mt-4 px-8 py-3 rounded-lg  ${isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-cyan-600'}`}
-                        disabled={isLoading}
-                    >
-                        {isLoading ? (
-                            <div className="spinner">
-                                <div className="spin"></div> {/* Spinner */}
-                            </div>
-                        ) : (
-                            'Save Changes'
-                        )}
-                    </button>
-                    </div>
-
-                </div>
-
-                <div className="reviews-section mb-8">
-                    <h2 className="text-2xl font-semibold mb-4">Your Reviews</h2>
-                    <ReviewList userId={user?.uid} />
-                </div>
-
+        <div className="profile-page bg-black text-white min-h-screen p-6 flex flex-col lg:flex-row">
+          {isFileTooLarge && (
+            <div className="error-message text-red-500 mb-4">The file size exceeds the limit of 1MB. Please upload a smaller image.</div>
+          )}
+      
+          {/* Left Section */}
+          <div className="left-section w-full lg:w-2/3 pr-0 lg:pr-6 mb-8 lg:mb-0">
+            <h1 className="text-4xl font-bold mb-8 text-yellow-500">Profile Page</h1>
+      
+            {/* Profile Header */}
+            <div className="profile-header flex items-center gap-6 mb-8 flex-col lg:flex-row">
+              <img
+                src={`${profilePicture}?${new Date().getTime()}`}
+                alt="Profile"
+                className="w-36 h-36 rounded-full border-4 border-yellow-500 object-cover"
+              />
+              <div className="flex flex-col gap-4 w-full lg:w-auto">
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Edit Username"
+                  className="bg-gray-800 border border-gray-700 text-white p-3 rounded-lg focus:ring-2 focus:ring-yellow-500"
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleProfilePictureChange}
+                  className="text-gray-300 text-sm"
+                />
+              </div>
+            </div>
+      
+            {/* Preferences Section */}
+            <div className="preferences mb-8">
+              <h2 className="text-2xl font-semibold mb-4">Preferences</h2>
+              <div className="flex flex-wrap gap-4 justify-center">
+                {Object.keys(genreToId).map((genre, index) => (
+                  <button
+                    key={index}
+                    className={`px-5 py-2 rounded-lg ${selectedGenres.includes(genre) ? 'bg-yellow-500' : 'bg-gray-700'} hover:bg-yellow-600`}
+                    onClick={() =>
+                      setSelectedGenres((prev) =>
+                        prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre]
+                      )
+                    }
+                  >
+                    {genre}
+                  </button>
+                ))}
+              </div>
+              <div className="flex justify-center mt-4">
                 <button
-                    onClick={handleLogout}
-                    className="mt-4 bg-red-500 px-8 py-3 rounded-lg hover:bg-red-600"
+                  onClick={handleSave}
+                  className={`mt-4 px-8 py-3 rounded-lg ${isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-cyan-600'}`}
+                  disabled={isLoading}
                 >
-                    Logout
-                </button>
-            </div>
-            <div className="watchlist-section w-1/3">
-                <h2 className="text-2xl font-semibold mb-4">Your Watchlist</h2>
-                <div className="flex flex-wrap gap-4">
-                    {watchlist.length === 0 ? (
-                        <p className="text-gray-500">No movies in watchlist yet</p>
-                    ) : (
-                        watchlist.map((movie) => (
-                            <div key={movie.id} className="text-center">
-                                <img src={movie.posterPath} alt={movie.title} className="w-24 h-32" />
-                                <p>{movie.title}</p>
-                                <button
-                                    onClick={() => handleRemoveFromWatchlist(movie.id)}
-                                    className="text-red-500 mt-2"
-                                >
-                                    Remove
-                                </button>
-                            </div>
-                        ))
-                    )}
-                    <div>
-                        {showRecommendations && recommendations.length > 0 && (
-                            <div className="mt-6">
-                                <h2 className="text-2xl font-semibold mb-4">Recommendations</h2>
-                                <div className="grid grid-cols-3 gap-6">
-                                    {recommendations.map((movie) => (
-                                        <div
-                                            key={movie.id}
-                                            onClick={() => handleRecommendationClick(movie.id)}
-                                            className="cursor-pointer bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
-                                        >
-                                            <img
-                                                src={movie.posterPath}
-                                                alt={movie.title}
-                                                className="w-full h-48 object-cover rounded-lg mb-4"
-                                            />
-                                            <p className="text-center text-lg font-medium text-white">{movie.title}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
+                  {isLoading ? (
+                    <div className="spinner">
+                      <div className="spin"></div>
                     </div>
-                </div>
-
-                <div>
+                  ) : (
+                    'Save Changes'
+                  )}
+                </button>
+              </div>
+            </div>
+      
+            {/* Reviews Section */}
+            <div className="reviews-section mb-8">
+              <h2 className="text-2xl font-semibold mb-4">Your Reviews</h2>
+              <ReviewList userId={user?.uid} />
+            </div>
+      
+            <button
+              onClick={handleLogout}
+              className="mt-4 bg-red-500 px-8 py-3 rounded-lg hover:bg-red-600 w-full"
+            >
+              Logout
+            </button>
+          </div>
+      
+          {/* Watchlist Section */}
+          <div className="watchlist-section w-full lg:w-1/3 mb-8 lg:mb-0">
+            <h2 className="text-2xl font-semibold mb-4">Your Watchlist</h2>
+            <div className="flex flex-wrap gap-4 justify-center">
+              {watchlist.length === 0 ? (
+                <p className="text-gray-500">No movies in watchlist yet</p>
+              ) : (
+                watchlist.map((movie) => (
+                  <div key={movie.id} className="text-center">
+                    <img src={movie.posterPath} alt={movie.title} className="w-24 h-32" />
+                    <p>{movie.title}</p>
                     <button
-                        onClick={() => setShowRecommendations(!showRecommendations)}
-                        className="mt-4 bg-yellow-500 px-8 py-3 rounded-lg hover:bg-yellow-600"
+                      onClick={() => handleRemoveFromWatchlist(movie.id)}
+                      className="text-red-500 mt-2"
                     >
-                        {showRecommendations ? 'Hide Recommendations' : 'See Recommendations'}
+                      Remove
                     </button>
-                </div>
-            </div>
-            <div className="right-section w-1/3">
-                <h2 className="text-2xl font-semibold mb-6">Your Rated Movies</h2>
-                <ul className="space-y-4">
-                    {ratedMovies.map((movie) => (
-                        <li
-                            key={movie.id}
-                            className="flex items-center gap-4 p-4 bg-gray-800 rounded-lg hover:bg-gray-700 cursor-pointer"
-                            onClick={() => handleMovieClick(movie.id)}
-                        >
-                            <div>
-                                <h3 className="text-lg font-semibold">{movie.title}</h3>
-                                <p className="text-yellow-400">Rating: {movie.rating}/10</p>
-                            </div>
-                        </li>
+                  </div>
+                ))
+              )}
+              {showRecommendations && recommendations.length > 0 && (
+                <div className="mt-6">
+                  <h2 className="text-2xl font-semibold mb-4">Recommendations</h2>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+                    {recommendations.map((movie) => (
+                      <div
+                        key={movie.id}
+                        onClick={() => handleRecommendationClick(movie.id)}
+                        className="cursor-pointer bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
+                      >
+                        <img
+                          src={movie.posterPath}
+                          alt={movie.title}
+                          className="w-full h-48 object-cover rounded-lg mb-4"
+                        />
+                        <p className="text-center text-lg font-medium text-white">{movie.title}</p>
+                      </div>
                     ))}
-                </ul>
+                  </div>
+                </div>
+              )}
             </div>
+      
+            <div className="flex justify-center">
+              <button
+                onClick={() => setShowRecommendations(!showRecommendations)}
+                className="mt-4 bg-yellow-500 px-8 py-3 rounded-lg hover:bg-yellow-600 w-full"
+              >
+                {showRecommendations ? 'Hide Recommendations' : 'See Recommendations'}
+              </button>
+            </div>
+          </div>
+      
+          {/* Right Section (Rated Movies) */}
+          <div className="right-section w-full lg:w-1/3">
+            <h2 className="text-2xl font-semibold mb-6">Your Rated Movies</h2>
+            <ul className="space-y-4">
+              {ratedMovies.map((movie) => (
+                <li
+                  key={movie.id}
+                  className="flex items-center gap-4 p-4 bg-gray-800 rounded-lg hover:bg-gray-700 cursor-pointer"
+                  onClick={() => handleMovieClick(movie.id)}
+                >
+                  <div>
+                    <h3 className="text-lg font-semibold">{movie.title}</h3>
+                    <p className="text-yellow-400">Rating: {movie.rating}/10</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-    );
-};
-
-export default ProfilePage;
+      );
+    }
+    export default ProfilePage;      
