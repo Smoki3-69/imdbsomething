@@ -5,7 +5,7 @@ import MovieDetails from "../Pages/MovieDetails.tsx";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase.ts";
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/swiper-bundle.min.css";  
+
 
 const MovieCarousel = () => {
   const [startIndexTrending, setStartIndexTrending] = useState(0);
