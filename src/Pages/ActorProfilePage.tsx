@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// Mock data for actors with IDs
+
 const actors = [
     {
         id: 1190668,
