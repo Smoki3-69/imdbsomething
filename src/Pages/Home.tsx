@@ -12,7 +12,7 @@ const Home = () => {
     <div>
       <Hero />
       <main className="container mx-auto px-4 py-8">
-        {/* Navigation Category Slider */}
+      
         <div className="overflow-x-auto mb-12">
           <div className="flex space-x-4">
             {[
@@ -53,7 +53,6 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Movie Carousel */}
         <section className="mb-12">
           <div className="flex justify-between items-center mb-6"></div>
           <MovieCarousel movies={trendingMovies} />
