@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import MovieDetails from "../Pages/MovieDetails.tsx";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase.ts";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/swiper-bundle.min.css";  
 
 const MovieCarousel = () => {
   const [startIndexTrending, setStartIndexTrending] = useState(0);
@@ -13,21 +15,19 @@ const MovieCarousel = () => {
   const [firebaseRatings, setFirebaseRatings] = useState<Record<number, number>>({});
   const fetchMovieRating = async (movieId: number) => {
   try {
-    // Reference the specific movie document in the 'movies' collection
+    
     const movieRef = doc(db, "movies", movieId.toString());
     const movieDoc = await getDoc(movieRef);
-
-    // Check if the document exists and return the rating field
     if (movieDoc.exists()) {
       const movieData = movieDoc.data();
-      return movieData?.rating || "N/A"; // Default to "N/A" if no rating exists
+      return movieData?.rating || "N/A"; 
     } else {
       console.warn(`No movie found with ID: ${movieId}`);
-      return "N/A"; // Default to "N/A" if the document does not exist
+      return "N/A"; 
     }
   } catch (error) {
     console.error("Error fetching movie rating:", error);
-    return "N/A"; // Return "N/A" in case of any error
+    return "N/A"; 
   }
 };
 
@@ -203,93 +203,63 @@ const MovieCarousel = () => {
     <div>
       {/* Trending Movies Section */}
       <h2 className="text-2xl font-bold flex items-center gap-2">
-        <TrendingUp className="w-6 h-6 text-yellow-500" />
         Trending Now
       </h2>
-      <div className="relative group mb-8">
-        <div className="overflow-hidden">
-          <div
-            className="flex transition-transform duration-500 ease-in-out"
-            style={{
-              transform: `translateX(-${startIndexTrending * (100 / visibleMovies)}%)`,
-            }}
-          >
-            {trendingMovies.map((movie) => (
-              <div
-                key={movie.id}
-                className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 flex-shrink-0 p-2"
-                onMouseEnter={() => setHoveredMovie(movie.id)}
-                onMouseLeave={() => setHoveredMovie(null)}
-              >
-                <Link to={`/movie/${movie.id}`}>
-                  <MovieCard movie={movie} />
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-        {trendingMovies.length > visibleMovies && (
-          <>
-            <button
-              onClick={prevSlideTrending}
-              className="absolute left-0 top-1/2 -translate-y-1/2 bg-black/50 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-            <button
-              onClick={nextSlideTrending}
-              className="absolute right-0 top-1/2 -translate-y-1/2 bg-black/50 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-          </>
-        )}
-      </div>
+      <Swiper
+        spaceBetween={10} // Space between slides
+        slidesPerView={visibleMovies} // Number of visible slides
+        loop={true} // Loop through slides
+        navigation // Enables navigation arrows
+        breakpoints={{
+          640: {
+            slidesPerView: 1,
+          },
+          768: {
+            slidesPerView: 2,
+          },
+          1024: {
+            slidesPerView: 4,
+          },
+        }}
+      >
+        {trendingMovies.map((movie) => (
+          <SwiperSlide key={movie.id}>
+            <Link to={`/movie/${movie.id}`}>
+              <MovieCard movie={movie} />
+            </Link>
+          </SwiperSlide>
+        ))}
+      </Swiper>
 
       {/* Upcoming Movies Section */}
       <h2 className="text-2xl font-bold flex items-center gap-2">
-        <Clock className="w-6 h-6 text-yellow-500" />
         Coming Soon
       </h2>
-      <div className="relative group">
-        <div className="overflow-hidden">
-          <div
-            className="flex transition-transform duration-500 ease-in-out"
-            style={{
-              transform: `translateX(-${startIndexUpcoming * (100 / visibleMovies)}%)`,
-            }}
-          >
-            {upcomingMovies.map((movie) => (
-              <div
-                key={movie.id}
-                className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 flex-shrink-0 p-2"
-                onMouseEnter={() => setHoveredMovie(movie.id)}
-                onMouseLeave={() => setHoveredMovie(null)}
-              >
-                <Link to={`/movie/${movie.id}`}>
-                  <MovieCard movie={movie} />
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-        {upcomingMovies.length > visibleMovies && (
-          <>
-            <button
-              onClick={prevSlideUpcoming}
-              className="absolute left-0 top-1/2 -translate-y-1/2 bg-black/50 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-            <button
-              onClick={nextSlideUpcoming}
-              className="absolute right-0 top-1/2 -translate-y-1/2 bg-black/50 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-          </>
-        )}
-      </div>
+      <Swiper
+        spaceBetween={10} // Space between slides
+        slidesPerView={visibleMovies} // Number of visible slides
+        loop={true} // Loop through slides
+        navigation // Enables navigation arrows
+        breakpoints={{
+          640: {
+            slidesPerView: 1,
+          },
+          768: {
+            slidesPerView: 2,
+          },
+          1024: {
+            slidesPerView: 4,
+          },
+        }}
+      >
+        {upcomingMovies.map((movie) => (
+          <SwiperSlide key={movie.id}>
+            <Link to={`/movie/${movie.id}`}>
+              <MovieCard movie={movie} />
+            </Link>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   );
 };
