@@ -138,7 +138,7 @@ const ProfilePage = () => {
     const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
-            console.log("Selected file:", file);  // Add a console log
+            console.log("Selected file:", file);  
             if (!file.type.startsWith("image/")) {
                 setIsFileTooLarge(true);
                 return;
@@ -155,32 +155,31 @@ const ProfilePage = () => {
 
 
     const handleSave = async () => {
-        setIsLoading(true); // Set loading to true when save starts
+        setIsLoading(true); 
     
         try {
             const userRef = doc(db, 'users', user.uid);
             let imageUrl = profilePicture;
     
-            // If the profile picture is a file, upload it to storage
             if (typeof profilePicture === 'object' && profilePicture instanceof File) {
                 // Change the storage reference to /users/{user.uid}/profilePicture
                 const storageRef = ref(storage, `users/${user.uid}/profilePicture`);
                 const snapshot = await uploadBytes(storageRef, profilePicture);
-                imageUrl = await getDownloadURL(snapshot.ref); // Get the download URL of the uploaded image
+                imageUrl = await getDownloadURL(snapshot.ref); 
             }
     
-            // Update the user document with the new profile data
+            
             await setDoc(
                 userRef,
                 {
                     username,
-                    profilePicture: imageUrl, // Use the URL if it's an image
+                    profilePicture: imageUrl, 
                     preferences: selectedGenres.join(','),
                 },
                 { merge: true }
             );
     
-            // Set the updated profile information in state
+           
             setProfilePicture(imageUrl);
             setUsername(username);
     
@@ -189,7 +188,7 @@ const ProfilePage = () => {
             console.error('Error saving profile:', error);
             alert('Error updating profile, please try again.');
         } finally {
-            setIsLoading(false); // Stop loading when the operation finishes
+            setIsLoading(false); 
         }
     };
     
@@ -230,11 +229,10 @@ const ProfilePage = () => {
             <div className="error-message text-red-500 mb-4">The file size exceeds the limit of 1MB. Please upload a smaller image.</div>
           )}
       
-          {/* Left Section */}
+         
           <div className="left-section w-full lg:w-2/3 pr-0 lg:pr-6 mb-8 lg:mb-0">
             <h1 className="text-4xl font-bold mb-8 text-yellow-500">Profile Page</h1>
       
-            {/* Profile Header */}
             <div className="profile-header flex items-center gap-6 mb-8 flex-col lg:flex-row">
               <img
                 src={`${profilePicture}?${new Date().getTime()}`}
@@ -258,7 +256,7 @@ const ProfilePage = () => {
               </div>
             </div>
       
-            {/* Preferences Section */}
+           
             <div className="preferences mb-8">
               <h2 className="text-2xl font-semibold mb-4">Preferences</h2>
               <div className="flex flex-wrap gap-4 justify-center">
@@ -293,7 +291,7 @@ const ProfilePage = () => {
               </div>
             </div>
       
-            {/* Reviews Section */}
+           
             <div className="reviews-section mb-8">
               <h2 className="text-2xl font-semibold mb-4">Your Reviews</h2>
               <ReviewList userId={user?.uid} />
@@ -307,7 +305,7 @@ const ProfilePage = () => {
             </button>
           </div>
       
-          {/* Watchlist Section */}
+        
           <div className="watchlist-section w-full lg:w-1/3 mb-8 lg:mb-0">
             <h2 className="text-2xl font-semibold mb-4">Your Watchlist</h2>
             <div className="flex flex-wrap gap-4 justify-center">
@@ -360,7 +358,7 @@ const ProfilePage = () => {
             </div>
           </div>
       
-          {/* Right Section (Rated Movies) */}
+       
           <div className="right-section w-full lg:w-1/3">
             <h2 className="text-2xl font-semibold mb-6">Your Rated Movies</h2>
             <ul className="space-y-4">
