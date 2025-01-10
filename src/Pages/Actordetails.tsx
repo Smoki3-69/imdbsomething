@@ -9,7 +9,7 @@ const Actordetails = () => {
   const [movies, setMovies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const tmdbAPIKey = "859afbb4b98e3b467da9c99ac390e950"; // Add your TMDB API key here
+  const tmdbAPIKey = "859afbb4b98e3b467da9c99ac390e950"; 
 
   useEffect(() => {
     const fetchActorData = async () => {
